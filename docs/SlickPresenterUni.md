@@ -30,10 +30,9 @@ public class YourPresenterUni extends SlickPresenterUni<ViewActivity, ViewStateA
     }
 }
 ```
-First of all! What is `ViewStateActivity`? It’s a simple Immutable POJO class that holds the view’s state, 
-And it doesn't contains any Android specific dependency. Imagine a simple view that is responsible to show a movie 
-details and the users comments about the movie. It needs the movie details e.g Title, Poster, Ratings, Comments, 
-And is it in favorite list?, I just write the last two:
+First of all! What is `ViewStateActivity`? It’s a simple Immutable POJO class that holds the view’s state. 
+It doesn't contains any Android specific dependency. Imagine a simple view that is responsible to show movie 
+details like title, poster, ratings, comments or if you liked the movie or not. An example using the last two details would be:
 
 ```java
 public class ViewStateActivity {
@@ -55,16 +54,19 @@ public class ViewStateActivity {
     }
 }
 ```
-Dead simple, Also there are two abstract methods `start()` and `render()`,
-the `start()` method is called only once for the entire view lifecycle,
-it is called when the presenter’s `onViewUp()` is called,
-we use this method to create our ViewState stream.
+Dead simple. 
 
-The second one is the `render()` method, This method is called every time there’s a new `ViewState`, Also it gets called on 
-every `onViewUp()` call to deliver the last ViewState, e.g: Screen orientation
+The presneter has two abstract methods for overriding: `start()` and `render()`.
+
+The `start()` method is called only once for the entire view lifecycle.
+When the presenter’s `onViewUp()` is called, we use this method to create 
+our ViewState stream.
+
+The `render()` method is called every time there’s a new `ViewState`. It will get called on 
+every `onViewUp()` call to deliver the last ViewState (e.g: Screen orientation).
 
 
-Let’s fill up these methods, I begin with the `start()` method: 
+Let’s fill up these methods. I'll begin with the `start()` method: 
 
 ```java
 public class YourPresenterUni extends SlickPresenterUni<ViewActivity, ViewStateActivity> {
@@ -100,8 +102,8 @@ public class YourPresenterUni extends SlickPresenterUni<ViewActivity, ViewStateA
     }
 }
 ```
-There are two key methods here the `command()` and `reduce()` methods, I will dedicate another post to explain whats 
-``going on under the hood, But for now I just explain what they do. 
+There are two key methods here: the `command()` and `reduce()` methods. I will dedicate another post to explain whats 
+``going on under the hood, But for now I'll explain what they do. 
 
 ![How Commands and Reduce works](https://cdn-images-1.medium.com/max/880/1*D4Zxe8gKFTtoF4LcZ8CoNw.gif)
 
@@ -164,7 +166,7 @@ public Observable<Boolean> likeMovie(){
 }
 ```
 
-And finally the last part last part is rendering the ViewStates to View:
+And finally, the last part is rendering the ViewStates to the view:
 
 ```java
 @Override
@@ -177,8 +179,8 @@ protected void render(@NonNull ViewStateActivity state, @NonNull ViewActivity vi
 
 That's it.
 
-Did you notice we didn’t bother ourselves with any View or Presenter lifecycle spaghetti code!?
-We don’t even need to check for `getView() == null` in our code anymore,
-Bonus tip, that was just the Hollywood Principle: "Don't call us! We call you!"
+Did you notice we didn’t bother ourselves with any View or Presenter lifecycle spaghetti code?
+We don’t even need to check for `getView() == null` in our code anymore.
+Bonus tip: that was just the Hollywood Principle: "Don't call us! We call you!"
 
 
